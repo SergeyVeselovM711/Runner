@@ -20,6 +20,18 @@ public class PlatGen : MonoBehaviour
 
     public PlatManager[] platformsM;
 
+    float minHeight;
+    public Transform maxHeightPoint;
+    float maxHeight;
+    public float maxHeightChange;
+    float heightChange;
+
+    private DimeGen theDimeGen;
+    public float randomDimeTheshold;
+
+    public float randomBallTheshold;
+    public ObjectPooler ballPool;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +43,11 @@ public class PlatGen : MonoBehaviour
         {
             platsWidth[i] = platformsM[i].platform.GetComponent<BoxCollider2D>().size.x;
         }
+
+        minHeight = transform.position.y;
+        maxHeight = maxHeightPoint.position.y;
+
+        theDimeGen = FindObjectOfType<DimeGen>();
     }
 
     // Update is called once per frame
@@ -42,7 +59,19 @@ public class PlatGen : MonoBehaviour
 
             platSelector = Random.Range(0, platformsM.Length); //случайные платформы
 
-            transform.position = new Vector3(transform.position.x + platsWidth[platSelector] + distBetween, transform.position.y, transform.position.z);
+            heightChange = transform.position.y + Random.Range(maxHeightChange, -maxHeightChange); //случайная высота платформ
+
+            if (heightChange > maxHeight) //ограничение
+            {
+                heightChange = maxHeight;
+            }
+
+            else if (heightChange < minHeight)
+            {
+                heightChange = minHeight;
+            }
+
+            transform.position = new Vector3(transform.position.x + (platsWidth[platSelector])/2 + distBetween, heightChange, transform.position.z);
 
             
 
@@ -53,6 +82,29 @@ public class PlatGen : MonoBehaviour
             newPlatform.transform.position = transform.position; //установка новой платформы
             newPlatform.transform.rotation = transform.rotation; //вращение новой платформы
             newPlatform.SetActive(true); //активация платформ
+
+
+            if (Random.Range(0f, 100f) < randomDimeTheshold)
+            {
+                theDimeGen.SpawnDime(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z));
+            }
+
+            if (Random.Range(0f, 100f) < randomBallTheshold)
+            {
+                GameObject newBall = ballPool.GetPooledObject();
+
+                Vector3 ballPosition = new Vector3(0f, 0.5f, 0f);
+
+                newBall.transform.position = transform.position + ballPosition;
+                newBall.transform.rotation = transform.rotation;
+                newBall.SetActive(true);
+
+                //theDimeGen.SpawnDime(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z));
+            }
+
+
+            transform.position = new Vector3(transform.position.x + (platsWidth[platSelector]) / 2, transform.position.y, transform.position.z);
+
         }
     }
 }

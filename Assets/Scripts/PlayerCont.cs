@@ -21,6 +21,8 @@ public class PlayerCont : MonoBehaviour
 
     private bool stopJump;
 
+    private bool canDjump;
+
     Rigidbody2D rb;
     //Collider2D col;
 
@@ -74,6 +76,14 @@ public class PlayerCont : MonoBehaviour
                 stopJump = false;
 
             }
+
+            if(!isTouched && canDjump)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                stopJump = false;
+                canDjump = false;
+            }
+
         }
 
         if (Input.GetKey (KeyCode.Space) && !stopJump)
@@ -95,6 +105,7 @@ public class PlayerCont : MonoBehaviour
         if (isTouched) 
         {
             jumpTimeCounter = jumpTime;
+            canDjump = true;
         }
            
     }

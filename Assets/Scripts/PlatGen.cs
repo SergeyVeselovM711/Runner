@@ -13,6 +13,7 @@ public class PlatGen : MonoBehaviour
     public float distMin;
     public float distMax;
 
+
     //public GameObject[] platforms;
 
     int platSelector;
@@ -31,6 +32,10 @@ public class PlatGen : MonoBehaviour
 
     public float randomBallTheshold;
     public ObjectPooler ballPool;
+
+    public float powerupHeigth;
+    public ObjectPooler poweruPool;
+    public float powerupTheshold;
 
     // Start is called before the first frame update
     void Start()
@@ -71,7 +76,19 @@ public class PlatGen : MonoBehaviour
                 heightChange = minHeight;
             }
 
-            transform.position = new Vector3(transform.position.x + (platsWidth[platSelector])/2 + distBetween, heightChange, transform.position.z);
+            if (Random.Range(0f, 100f) < powerupTheshold)
+            {
+                GameObject newPowerup = poweruPool.GetPooledObject();
+
+                newPowerup.transform.position = transform.position + new Vector3(distBetween / 2, powerupHeigth, 0f);
+
+                newPowerup.SetActive(true);
+            }
+
+
+
+
+                transform.position = new Vector3(transform.position.x + (platsWidth[platSelector])/2 + distBetween, heightChange, transform.position.z);
 
             
 

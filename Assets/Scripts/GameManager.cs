@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         {
             platList[i].gameObject.SetActive(false);
         }
+
         thePlayer.transform.position = playerStartPoint;
         platGen.position = platStartPoint;
         thePlayer.gameObject.SetActive(true);
